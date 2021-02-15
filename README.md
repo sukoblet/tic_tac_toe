@@ -1,4 +1,4 @@
-# tic_tac_toe
+# Tic Tac Toe
  Simple Tic Tac Toe game written in Python using the PyGame package.
  
 ## Created by [@sukoblet](https://github.com/sukoblet)
