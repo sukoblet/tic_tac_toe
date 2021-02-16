@@ -5,25 +5,26 @@ import pygame
 
 
 class EventsListener:
-    def __init__(self, status, handler, fps):
+    def __init__(self, status, handler, fps, translator):
+        if status is None:
+            raise ValueError('You cannot transfer status as None to the constructor')
+        if handler is None:
+            raise ValueError('You cannot transfer handler as None to the constructor')
+        if translator is None:
+            raise ValueError('You cannot transfer translator as None to the constructor')
+        if fps <= 0:
+            raise ValueError('FPS must be a positive number')
+
         self._status = status
         self._handler = handler
         self._drawer = Drawer()
         self._fps = fps
-        self._translator = None
-
-    def set_translator(self, translator):
-        # TODO should we allow setting the translator multiple times?
         self._translator = translator
 
     def listen_to_move(self):
-        if self._translator is None:
-            raise ValueError('You must set the translator object before calling this method')
-
-        running = True
         clock = pygame.time.Clock()
-        self._status.start_round()  # FIXME fix the method name to the real one
-        while running:
+        self._status.start_round()
+        while self._status.is_round_active():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -34,9 +35,6 @@ class EventsListener:
                 if event.type == pygame.MOUSEBUTTONUP:
                     self._handler.callback_onclick(event)
                     # TODO the best way would be getting row/column out of x, y, we need some translator
-
-            if self._status.is_round_finished():
-                running = False
 
             clock.tick(self._fps)
 

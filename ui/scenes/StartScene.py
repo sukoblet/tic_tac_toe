@@ -23,7 +23,6 @@ class StartScene:
             pygame.quit()
             sys.exit()
 
-        # TODO change with tuple, don't know why it's arguing
         if event.type == pygame.MOUSEBUTTONUP:
             if self._start_button.collidepoint(event.pos):
                 self._status.play_game()

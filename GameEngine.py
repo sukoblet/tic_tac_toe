@@ -32,13 +32,12 @@ class GameEngine:
         self._play()
 
     def _play(self):
-        self._view.play()
+        game_scene = self._view.play()
+        game_scene.render()
+        listener = game_scene.get_listener()
 
         while self._status.is_game():
-            for event in pygame.event.get():  # TODO change this to EventsListener and so on
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+            listener.listen_to_move()
 
             self._clock.tick(self._fps)
 
