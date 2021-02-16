@@ -1,8 +1,6 @@
+from ui.scenes.EndScene import EndScene
 from ui.scenes.StartScene import StartScene
 from ui.scenes.GameScene import GameScene
-from ui.scenes.EndScene import EndScene
-
-from ui.EventsListener import EventsListener
 
 import pygame
 
@@ -33,11 +31,7 @@ class View:
         self._line_width = 16
         self._padding = 30
 
-        self._spacing = self._padding
-
-        self._status_height = 100
-        self._window_height = 2 * self._padding + self._status_height + 4 * self._line_width \
-                              + 3 * self._cell_side + self._spacing
+        self._window_height = 2 * self._padding + 4 * self._line_width + 3 * self._cell_side
 
         self._window_width = 2 * self._padding + 4 * self._line_width + 3 * self._cell_side
         self._status_width = self._window_width - 2 * self._padding
@@ -50,14 +44,15 @@ class View:
     def play(self):
         board_side = 4 * self._line_width + 3 * self._cell_side
         x_offset = self._padding
-        y_offset = self._padding + self._status_height + self._spacing
-        board_view = BoardView((board_side, board_side), self._cell_side, self._line_width, (x_offset, y_offset))
+        y_offset = self._padding
         translator = PositionTranslator(x_offset, y_offset, self._cell_side, self._line_width)
+        board_view = BoardView((board_side, board_side), self._cell_side, self._line_width, (x_offset, y_offset),
+                               self._game.get_board(), translator)
         self._game_scene = GameScene(self._game, self._window, translator, self._fps, board_view)
 
         return self._game_scene
 
-    def end(self):  # TODO show end scene
-        pass
+    def end(self):
+        self._end_scene = EndScene(self._game, self._window)
 
-    # TODO here may be methods for showing the game scene and end scene, as well as rounds switching
+        return self._end_scene

@@ -1,7 +1,7 @@
-import enum
+from enum import Enum
 
 
-class GameState(enum.IntEnum):
+class GameState(Enum):
     INITIAL = 0
     START = 1
     GAME = 2

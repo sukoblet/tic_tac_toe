@@ -6,7 +6,8 @@ class Board:
         self._board = [[-1 for _ in range(3)] for _ in range(3)]
 
     def has_three_in_row(self):
-        return self.get_winner() is not None
+        winner = self.get_winner()
+        return winner is not None and winner != Sign.NO_SIGN
 
     def get_winner(self):
         for row in range(0, 3):
@@ -24,38 +25,31 @@ class Board:
                 and Sign(self._board[0][2]) != Sign.NO_SIGN:
             return Sign(self._board[0][2])
 
-        return None
+        return Sign.NO_SIGN if self._is_everything_taken() else None
 
-    def is_draw(self):
+    def _is_everything_taken(self):
         for row in range(0, 3):
             for col in range(0, 3):
                 if not self.is_taken(row, col):
                     return False
-        if self.has_three_in_row():
-            return False
         return True
 
-    def add_cross(self, row, col):
-        if not 0 <= row < 3 or not 0 <= col < 3:
-            raise ValueError('Row and column must be the not negative integers that are less than 3 ')
-        self._board[row][col] = Sign.CROSS.value
-        self.print_board()
+    def is_draw(self):
+        return self._is_everything_taken() and not self.has_three_in_row()
 
-    def add_nought(self, row, col):
+    def add_sign(self, row, col, sign):
         if not 0 <= row < 3 or not 0 <= col < 3:
             raise ValueError('Row and column must be the not negative integers that are less than 3 ')
-        self._board[row][col] = Sign.NOUGHT.value
-        self.print_board()
+        if not isinstance(sign, Sign) or sign == Sign.NO_SIGN:
+            raise ValueError('Argument sign must be the instance of Sign class and have a value of CROSS or NOUGHT')
+        self._board[row][col] = sign.value
 
     def is_taken(self, row, col):
         if not 0 <= row < 3 or not 0 <= col < 3:
             raise ValueError('Row and column must be the not negative integers that are less than 3 ')
-        if self._board[row][col] == Sign.NO_SIGN.value:
-            return False
-        else:
-            return True
+        return not Sign(self._board[row][col]) == Sign.NO_SIGN
 
-    def print_board(self):
-        print(*self._board[0])
-        print(*self._board[1])
-        print(*self._board[2])
+    def get_sign(self, row, col):
+        if not 0 <= row < 3 or not 0 <= col < 3:
+            raise ValueError('Row and column must be the not negative integers that are less than 3 ')
+        return Sign(self._board[row][col])

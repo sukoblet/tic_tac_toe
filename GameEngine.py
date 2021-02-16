@@ -1,4 +1,3 @@
-import sys
 import pygame
 
 
@@ -12,7 +11,6 @@ class GameEngine:
 
         self._clock = pygame.time.Clock()
 
-    # TODO game engine switches scenes, rounds and so on, it uses APIs from packages to visualise/calculate everything
     def run(self):
         if not self._status.is_initial():
             raise ValueError("The engine is already run, you can't run it again")
@@ -32,14 +30,22 @@ class GameEngine:
         self._play()
 
     def _play(self):
+        if not self._status.is_game:
+            self._status.play_game()
         game_scene = self._view.play()
         game_scene.render()
         listener = game_scene.get_listener()
 
-        while self._status.is_game():
-            listener.listen_to_move()
+        listener.listen_to_move()
 
-            self._clock.tick(self._fps)
+        self._end()
 
     def _end(self):
-        self._view.end()
+        end_scene = self._view.end()
+        end_scene.render()
+
+        while True:
+            for event in pygame.event.get():
+                end_scene.handle_event(event)
+
+                self._clock.tick(self._fps)

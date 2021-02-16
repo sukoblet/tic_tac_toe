@@ -1,21 +1,30 @@
 import sys
 import pygame
 
+from ui.utils.Drawer import Drawer
+
 
 class StartScene:
     def __init__(self, game, window):
         self._game = game
         self._window = window
+        self._window.fill((51, 51, 51))
         self._status = game.get_status()
 
-        # TODO change magic numbers
-        self._start_button = pygame.Rect((self._window.get_width() // 2 - 75, self._window.get_height() // 2 - 35),
-                                         (150, 70))
+        self._BUTTON_COLOR = (198, 198, 198)
 
-        # TODO maybe draw using Drawer object
+        button_width, button_height = (300, 140)
+        self._start_button = pygame.Rect((self._window.get_width() // 2 - button_width // 2,
+                                          self._window.get_height() // 2 - button_height // 2),
+                                         (button_width, button_height))
 
     def render(self):
-        pygame.draw.rect(self._window, (198, 198, 198), self._start_button)
+        drawer = Drawer(pygame.display.get_surface())
+        center = (self._window.get_width() // 2, self._window.get_height() // 2)
+
+        pygame.draw.rect(self._window, self._BUTTON_COLOR, self._start_button)
+        drawer.draw_text('Start', 100, center, font_color=(51, 51, 51))
+
         pygame.display.update()
 
     def handle_event(self, event):

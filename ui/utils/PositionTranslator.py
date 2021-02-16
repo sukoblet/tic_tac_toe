@@ -11,7 +11,7 @@ class PositionTranslator:
         self._y_max = self._y_offset + 4 * self._line_width + 3 * self._cell_side
 
     def to_row_column(self, x, y):
-        if x < self._x_min or x > self._x_max or y < self._y_min or y > self._y_max:
+        if x <= self._x_min or x >= self._x_max or y <= self._y_min or y >= self._y_max:
             return None
 
         x = x - self._line_width - self._x_offset
@@ -23,8 +23,8 @@ class PositionTranslator:
         if localx > self._cell_side or localy > self._cell_side:
             return None
 
-        return x // (self._cell_side + self._line_width), y // (self._cell_side + self._line_width)
+        return y // (self._cell_side + self._line_width),  x // (self._cell_side + self._line_width)
 
     def to_xy(self, row, col):
-        return self._x_min + row * (self._cell_side + self._line_width) + self._cell_side // 2, \
-               self._y_min + col * (self._cell_side + self._line_width) + self._cell_side // 2
+        return self._y_min + col * (self._cell_side + self._line_width) + self._cell_side // 2, \
+               self._x_min + row * (self._cell_side + self._line_width) + self._cell_side // 2

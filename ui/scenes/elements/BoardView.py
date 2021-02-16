@@ -1,8 +1,11 @@
 import pygame
 
+from backend.utils.Sign import Sign
+from ui.utils.Drawer import Drawer
+
 
 class BoardView:
-    def __init__(self, size, cs, lw, offset):
+    def __init__(self, size, cs, lw, offset, board, translator):
         self._line_width = lw
         self._cell_side = cs
         self._LINE_COLOR = (80, 80, 80)
@@ -10,11 +13,15 @@ class BoardView:
         self._x_off, self._y_off = offset
         self._width, self._height = size
 
+        self._board = board
+        self._translator = translator
+
+        self._drawer = Drawer(pygame.display.get_surface())
+
         assert self._line_width % 2 == 0, 'Line width value must be even to draw lines in a pretty way'
         assert self._cell_side % 2 == 0, 'Cell side value must be even to draw cells in a pretty way'
 
     def render(self):
-        # TODO maybe use drawer for this
         surf = pygame.display.get_surface()
 
         y_start = self._y_off + 1
@@ -38,11 +45,9 @@ class BoardView:
 
         pygame.display.update()
 
-    def draw_cross(self, row, column):
-        pass
-
-    def draw_nought(self, row, column):
-        pass
-
-    def draw_winner(self, row1, column1, row2, column2):
-        pass
+    def update(self, row, col):
+        sign = self._board.get_sign(row, col)
+        if sign == Sign.CROSS:
+            self._drawer.draw_cross(self._translator.to_xy(row, col), int(0.8 * self._cell_side))
+        if sign == Sign.NOUGHT:
+            self._drawer.draw_nought(self._translator.to_xy(row, col), int(0.8 * self._cell_side))
